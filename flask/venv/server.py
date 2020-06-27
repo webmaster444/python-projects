@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, request, redirect
+import csv
 app = Flask(__name__)
 
 
@@ -7,16 +8,36 @@ def index():
     return render_template('./index.html')
 
 
-@app.route('/about')
-def about():
-    return render_template('./about.html')
+@app.route('/<string:page_name>')
+def about(page_name):
+    return render_template(page_name+'.html')
 
 
-@app.route('/works')
-def works():
-    return render_template('./works.html')
+def write_to_file(data):
+    with open('database.txt', mode='a') as database:
+        email = data["email"]
+        subject = data["subject"]
+        message = data["message"]
+        file = database.write(f'\n{email},{subject},{message}')
 
 
-@app.route('/contact')
-def contact():
-    return render_template('./contact.html')
+def write_to_csv(data):
+    with open('database.csv', mode='a', newline="") as database2:
+        email = data["email"]
+        subject = data["subject"]
+        message = data["message"]
+        csv_writer = csv.writer(database2, delimiter=",",
+                                quotechar='"',  quoting=csv.QUOTE_MINIMAL)
+        csv_writer.writerow([email, subject, message])
+
+
+@app.route('/submit_form', methods=['POST', 'GET'])
+def submit_form():
+    if request.method == 'POST':
+        data = request.form.to_dict()
+        write_to_file(data)
+        write_to_csv(data)
+        return redirect('/thankyou')
+    else:
+        return 'something wrong'
+    return 'form submitted'

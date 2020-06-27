@@ -25,5 +25,8 @@ Merge number of pdf files into one pdf and add watermark to all pages
 ## Flask
 Create a portfolio website using Flask
 
+## Selenium Testing Automation
+Create a testing automation script of this [Selenium Easy](https://www.seleniumeasy.com/test/basic-first-form-demo.html)
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
